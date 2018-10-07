@@ -6,8 +6,7 @@ int main(){
 		{"DEX" , 2},
 		{"INT" , 2}
 	};
-	sword* test_sword = new sword();
-	std::cout << test_sword->calculate_damage(test_char_stats) << std::endl;
-	delete test_sword;
+	sword test_sword = sword();
+	std::cout << test_sword.calculate_damage(test_char_stats) << std::endl;
 	return 0;
 }
