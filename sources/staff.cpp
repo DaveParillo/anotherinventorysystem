@@ -7,7 +7,7 @@ items::staff::staff(){
 		{"INT" , 3}
 	};
 }
-virtual int items::staff::calculate_damage(std::map<std::string, int> character_stats){
+int items::staff::calculate_damage(stats_t character_stats) {
 	std::cout << "staff damage uses strength";
 	return stats["INT"] + character_stats["INT"];
 }
