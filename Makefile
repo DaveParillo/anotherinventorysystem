@@ -1,13 +1,40 @@
-# Riles Terrible makefile
-CPPC = g++ -std=c++11 -Wall -Wextra
+# simple makefile
+#
+TARGET := inventory
+src    := main.cpp item.cpp player.cpp stat.cpp
+obj    := $(src:.cpp=.o)
+dep    := $(obj:.o=.d)
+CXX    := g++
 
-test_inventory: main.o staff.o sword.o
-	${CPPC} main.o staff.o sword.o -o test_inventory
-main.o: sources/main.cpp includes/item.h
-	${CPPC} -c sources/main.cpp
-staff.o: sources/staff.cpp includes/item.h
-	${CPPC} -c sources/staff.cpp
-sword.o: sources/sword.cpp includes/item.h
-	${CPPC} -c sources/sword.cpp
+ifndef CXXFLAGS
+    CXXFLAGS = -Wall -Wextra -pedantic -std=c++11
+endif
+ifndef CFLAGS
+    CFLAGS = -Wall -Wextra -pedantic -std=c11
+endif
+
+INCLUDES += -I./include
+LDFLAGS  += -lm
+
+.PHONY: clean cleandep
+
+all: $(TARGET)
+
+-include $(dep)   # include all dep files in the makefile
+
+$(TARGET): $(obj)
+	${CXX} ${CXXFLAGS} ${INCLUDES}  -o $@ $^ ${LDFLAGS}
+
+%.o: %.cpp
+	${CXX} ${CXXFLAGS} ${INCLUDES}  -c $< -o $@
+
+%.d: %.cpp
+	${CXX} ${CXXFLAGS} ${INCLUDES} $< -MM -MT $(@:.d=.o) >$@
+
+cleanall: clean cleandep
+
 clean:
-	rm *.o && rm test_inventory
+	rm -f $(TARGET) $(obj)
+
+cleandep:
+	rm -f $(dep)
